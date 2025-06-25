@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Set directory for log files
+LOG_DIR="health_logs"
+
+# Create log directory if it doesn't exist
+mkdir -p "$LOG_DIR"
+
+# Read URLs from file
+while IFS= read -r url; do
+  # Use curl to check the HTTP status code
+  status_code=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+
+  # Determine site status based on HTTP status code 
+  if [ "$status_code" -ge 200 ] && [ "$status_code" -lt 300 ]; then
+    status="UP"
+  else
+    status="DOWN"
+  fi
+
+  # Log the status with timestamp 
+  timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  log_file="$LOG_DIR/$(date +"%Y-%m-%d").log"
+  echo "$timestamp - $url - $status" >> "$log_file"
+
+  # Optional: Send email alert if site is down
+  if [ "$status" = "DOWN" ]; then
+    recipient_email="your_email@example.com"
+    subject="Site Down: $url"
+    body="$timestamp - $url - $status"
+
+    # Send email using mail command (ensure mailutils is installed)
+    echo "$body" | mail -s "$subject" "$recipient_email"
+  fi
+
+done < urls.txt
