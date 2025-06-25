@@ -1,0 +1,12 @@
+1 - nano website_health_check.sh
+2 - Paste the script.
+3 - Press Ctrl + O to save.
+    Press Enter to confirm the filename.
+    Press Ctrl + X to exit Nano.
+4 - chmod +x website_health_check.sh
+5 - nano urls.txt
+    https://example.com
+    ctrl +o, enter, ctrl +x 
+6 - sudo apt update
+    sudo apt install curl mailutils
+7 - ./website_health_check.sh (Run the script)
